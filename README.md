@@ -11,6 +11,7 @@
 [![Viewer](https://img.shields.io/badge/Viewer-v7-green.svg)](https://forge.autodesk.com/)
 
 # Description
+
 This sample is part of the [Online Viewer Walkthrough](https://forge.autodesk.com/developer/learn/viewer-app).
 
 In this sample, we will be creating a simple web page that allows end users to upload some files to Forge storage service, then translate them and display them in a web browser.
@@ -24,6 +25,7 @@ In this sample, we will be creating a simple web page that allows end users to u
 - Display the file in a web browser
 
 ## Thumbnail
+
 ![thumbnail](/thumbnail.png)
 
 # Setup
@@ -33,11 +35,11 @@ In this sample, we will be creating a simple web page that allows end users to u
 1. A Forge account: [Getting Started with Forge](https://forge.autodesk.com/developer/getting-started)
 2. A text editor of your choice. (For example Brackets or Visual Studio Code are good choices.)
 3. A basic knowledge of :
-    - HTML and CSS
-    - JavaScript ES6
-    - Command-line programs
-      - Node.js Command Line (for Windows users)
-      - Terminal (for Mac/Linux/Unix users)
+   - HTML and CSS
+   - JavaScript ES6
+   - Command-line programs
+     - Node.js Command Line (for Windows users)
+     - Terminal (for Mac/Linux/Unix users)
 
 ## Running locally
 
@@ -60,22 +62,25 @@ Windows (use Node.js command line from Start menu)
 
 ```bash
 npm install
-set FORGE_CLIENT_ID=<<YOUR CLIENT ID FROM DEVELOPER PORTAL>>
-set FORGE_CLIENT_SECRET=<<YOUR CLIENT SECRET>>
+set FORGE_CLIENT_ID = OUuhvY15Ev5liacsBbJxPWIIxkJ9tsEy
+set FORGE_CLIENT_SECRET = s8q0iTPzFWGCT59N
 npm start
 ```
 
 Open a browser and navigate to http://localhost:3000.
 
 Click on the `Authorize me` link and then click through the links on the browser to:
-  - Create a bucket
-  - Save a supported file to a bucket
-  - Display the file in a web browser
 
-*NOTE:* _It may take several minutes to complete translate the file._
+- Create a bucket
+- Save a supported file to a bucket
+- Display the file in a web browser
+
+_NOTE:_ _It may take several minutes to complete translate the file._
 
 # License
+
 This sample is licensed under the terms of the [MIT License](http://opensource.org/licenses/MIT). Please see the [LICENSE](LICENSE) file for full details.
 
 # Support
+
 forge.help@autodesk.com

@@ -40,8 +40,8 @@ var server = app.listen(app.get('port'), function () {
 // Initialize the 2-legged OAuth2 client, and
 // set specific scopes
 //-------------------------------------------------------------------
-var FORGE_CLIENT_ID = process.env.FORGE_CLIENT_ID;
-var FORGE_CLIENT_SECRET = process.env.FORGE_CLIENT_SECRET;
+var FORGE_CLIENT_ID = 'OUuhvY15Ev5liacsBbJxPWIIxkJ9tsEy';
+var FORGE_CLIENT_SECRET = 's8q0iTPzFWGCT59N';
 var access_token = '';
 var scopes = 'data:read data:write data:create bucket:create bucket:read';
 const querystring = require('querystring');
@@ -103,7 +103,8 @@ app.get('/api/forge/oauth/public', function (req, res) {
 });
 
 // Buckey key and Policy Key for OSS
-const bucketKey = FORGE_CLIENT_ID.toLowerCase() + '_tutorial_bucket'; // Prefix with your ID so the bucket key is unique across all buckets on all other accounts
+const key = 'OUuhvY15Ev5liacsBbJxPWIIxkJ9tsEy';
+const bucketKey = key.toLowerCase() + '_tutorial_bucket'; // Prefix with your ID so the bucket key is unique across all buckets on all other accounts
 const policyKey = 'transient'; // Expires in 24hr
 
 // Route /api/forge/datamanagement/bucket/create
