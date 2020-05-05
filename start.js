@@ -1,25 +1,3 @@
-/////////////////////////////////////////////////////////////////////
-// Copyright (c) Autodesk, Inc. All rights reserved
-//
-// Permission to use, copy, modify, and distribute this software in
-// object code form for any purpose and without fee is hereby granted,
-// provided that the above copyright notice appears in all copies and
-// that both that copyright notice and the limited warranty and
-// restricted rights notice below appear in all supporting
-// documentation.
-//
-// AUTODESK PROVIDES THIS PROGRAM "AS IS" AND WITH ALL FAULTS.
-// AUTODESK SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTY OF
-// MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE.  AUTODESK, INC.
-// DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM WILL BE
-// UNINTERRUPTED OR ERROR FREE.
-/////////////////////////////////////////////////////////////////////
-
-//-------------------------------------------------------------------
-// These packages are included in package.json.
-// Run `npm install` to install them.
-// 'path' is part of Node.js and thus not inside package.json.
-//-------------------------------------------------------------------
 var express = require('express');           // For web server
 var Axios = require('axios');               // A Promised base http client
 var bodyParser = require('body-parser');    // Receive JSON format
@@ -64,7 +42,7 @@ app.get('/api/forge/oauth', function (req, res) {
         .then(function (response) {
             // Success
             access_token = response.data.access_token;
-            console.log(response);
+            console.log(response, 'This is the response.');
             res.redirect('/api/forge/datamanagement/bucket/create');
         })
         .catch(function (error) {
@@ -183,11 +161,14 @@ app.post('/api/forge/datamanagement/bucket/upload', upload.single('fileToUpload'
                 'Content-Disposition': req.file.originalname,
                 'Content-Length': filecontent.length
             },
+            maxContentLength: Infinity,
+            maxBodyLength: Infinity,
             data: filecontent
         })
             .then(function (response) {
                 // Success
-                console.log(response);
+                //console.log(response);
+                console.log(filecontent.length);
                 var urn = response.data.objectId.toBase64();
                 res.redirect('/api/forge/modelderivative/' + urn);
             })
