@@ -1,6 +1,7 @@
 var express = require('express');           // For web server
 var Axios = require('axios');               // A Promised base http client
 var bodyParser = require('body-parser');    // Receive JSON format
+const fetch = require('node-fetch');
 
 // Set up Express web server
 var app = express();
@@ -24,7 +25,7 @@ var access_token = '';
 var scopes = 'data:read data:write data:create bucket:create bucket:read';
 const querystring = require('querystring');
 
-// // Route /api/forge/oauth
+/*
 app.get('/api/forge/oauth', function (req, res) {
     Axios({
         method: 'POST',
@@ -50,6 +51,32 @@ app.get('/api/forge/oauth', function (req, res) {
             console.log(error);
             res.send('Failed to authenticate');
         });
+});
+*/
+// Route /api/forge/oauth
+app.get('/api/forge/oauth/nuevo', async (request, response) => {
+    //console.log(request.body);
+    const options = {
+        method: 'POST',
+        url: 'https://developer.api.autodesk.com/authentication/v1/authenticate',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: querystring.stringify({
+            client_id: FORGE_CLIENT_ID,
+            client_secret: FORGE_CLIENT_SECRET,
+            grant_type: 'client_credentials',
+            scope: scopes
+        })
+    };
+    try {
+        const askingToken = await fetch(options.url, options);
+        const token = await askingToken.json();
+        access_token = token.access_token;
+        console.log(token, 'This is the response.');
+        response.redirect('/api/forge/datamanagement/bucket/create');
+    } catch (error) {
+        console.error(error);
+        response.send('Failed to authenticate');
+    }
 });
 
 // Route /api/forge/oauth/public
