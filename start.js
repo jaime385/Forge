@@ -1,7 +1,7 @@
 var express = require('express');           // For web server
 var Axios = require('axios');               // A Promised base http client
 var bodyParser = require('body-parser');    // Receive JSON format
-const fetch = require('node-fetch');
+const fetch = require('node-fetch');        //Equivalent node library to fetch in the client side.
 
 // Set up Express web server
 var app = express();
@@ -25,34 +25,6 @@ var access_token = '';
 var scopes = 'data:read data:write data:create bucket:create bucket:read';
 const querystring = require('querystring');
 
-/*
-app.get('/api/forge/oauth', function (req, res) {
-    Axios({
-        method: 'POST',
-        url: 'https://developer.api.autodesk.com/authentication/v1/authenticate',
-        headers: {
-            'content-type': 'application/x-www-form-urlencoded',
-        },
-        data: querystring.stringify({
-            client_id: FORGE_CLIENT_ID,
-            client_secret: FORGE_CLIENT_SECRET,
-            grant_type: 'client_credentials',
-            scope: scopes
-        })
-    })
-        .then(function (response) {
-            // Success
-            access_token = response.data.access_token;
-            console.log(response, 'This is the response.');
-            res.redirect('/api/forge/datamanagement/bucket/create');
-        })
-        .catch(function (error) {
-            // Failed
-            console.log(error);
-            res.send('Failed to authenticate');
-        });
-});
-*/
 // Route /api/forge/oauth
 app.get('/api/forge/oauth/nuevo', async (request, response) => {
     //console.log(request.body);
@@ -72,7 +44,7 @@ app.get('/api/forge/oauth/nuevo', async (request, response) => {
         const token = await askingToken.json();
         access_token = token.access_token;
         console.log(token, 'This is the response.');
-        response.redirect('/api/forge/datamanagement/bucket/create');
+        response.redirect('/api/forge/datamanagement/bucket/create/nuevo');
     } catch (error) {
         console.error(error);
         response.send('Failed to authenticate');
@@ -109,10 +81,11 @@ app.get('/api/forge/oauth/public', function (req, res) {
 
 // Buckey key and Policy Key for OSS
 const key = 'OUuhvY15Ev5liacsBbJxPWIIxkJ9tsEy';
-const bucketKey = key.toLowerCase() + '_tutorial_bucket'; // Prefix with your ID so the bucket key is unique across all buckets on all other accounts
+// Prefix with your ID so the bucket key is unique across all buckets on all other accounts
+const bucketKey = key.toLowerCase() + '_tutorial_bucket';
 const policyKey = 'transient'; // Expires in 24hr
 
-// Route /api/forge/datamanagement/bucket/create
+/* Route /api/forge/datamanagement/bucket/create
 app.get('/api/forge/datamanagement/bucket/create', function (req, res) {
     // Create an application shared bucket using access token from previous route
     // We will use this bucket for storing all files in this tutorial
@@ -142,9 +115,40 @@ app.get('/api/forge/datamanagement/bucket/create', function (req, res) {
             console.log(error);
             res.send('Failed to create a new bucket');
         });
+});*/
+
+// Route /api/forge/datamanagement/bucket/create/nuevo
+app.get('/api/forge/datamanagement/bucket/create/nuevo', async (request, response) => {
+    // Create an application shared bucket using access token from previous route
+    const options = {
+        method: 'POST',
+        url: 'https://developer.api.autodesk.com/oss/v2/buckets',
+        headers: {
+            'content-type': 'application/json',
+            Authorization: 'Bearer ' + access_token
+        },
+        body: JSON.stringify({
+            'bucketKey': bucketKey,
+            'policyKey': policyKey
+        })
+    };
+    try {
+        const askingNewBucket = await fetch(options.url, options);
+        console.log(response);
+        response.redirect('/api/forge/datamanagement/bucket/detail/nuevo');
+
+    } catch (error) {
+        if (error.response && error.response.status == 409) {
+            console.log('Bucket already exists, skip creation.');
+            res.redirect('/api/forge/datamanagement/bucket/detail/nuevo');
+        }
+        // Failed
+        console.log(error);
+        res.send('Failed to create a new bucket')
+    }
 });
 
-// Route /api/forge/datamanagement/bucket/detail
+/* Route /api/forge/datamanagement/bucket/detail
 app.get('/api/forge/datamanagement/bucket/detail', function (req, res) {
     Axios({
         method: 'GET',
@@ -163,6 +167,27 @@ app.get('/api/forge/datamanagement/bucket/detail', function (req, res) {
             console.log(error);
             res.send('Failed to verify the new bucket');
         });
+});*/
+
+// Route /api/forge/datamanagement/bucket/detail/nuevo
+app.get('/api/forge/datamanagement/bucket/detail/nuevo', async (request, response) => {
+    const options = {
+        method: 'GET',
+        url: 'https://developer.api.autodesk.com/oss/v2/buckets/' + encodeURIComponent(bucketKey) + '/details',
+        headers: {
+            Authorization: 'Bearer ' + access_token
+        }
+    };
+    try {
+        const checkingForBucket = await fetch(options.url, options);
+        // Success
+        console.log(response);
+        response.redirect('/upload.html');
+    } catch (error) {
+        // Failed
+        console.log(error);
+        res.send('Failed to verify the new bucket');
+    }
 });
 
 // For converting the source into a Base64-Encoded string
