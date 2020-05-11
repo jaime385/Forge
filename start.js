@@ -164,7 +164,7 @@ app.post('/api/forge/datamanagement/bucket/upload/nuevo', upload.single('fileToU
             },
             maxContentLength: Infinity,
             maxBodyLength: Infinity,
-            data: filecontent
+            body: filecontent
         };
         try {
             const uploadFile = await fetch(options.url, options);
