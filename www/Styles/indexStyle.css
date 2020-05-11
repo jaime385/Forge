@@ -1,0 +1,12 @@
+/** Just simple CSS styling to make this page a little nicer **/
+main {
+  padding: 2em;
+}
+
+main a {
+  background-color: #3252aa;
+  color: #fff;
+  text-decoration: none;
+  padding: 1em;
+}
+/*# sourceMappingURL=indexStyle.css.map */

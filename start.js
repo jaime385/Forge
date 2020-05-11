@@ -71,7 +71,7 @@ app.get('/api/forge/oauth/public/nuevo', async (request, response) => {
         const authenticatingIdentity = await fetch(options.url, options);
         const authenticatingIdentityJson = await authenticatingIdentity.json();
         // Success
-        console.log(authenticatingIdentityJson);
+        //console.log(authenticatingIdentityJson);
         response.json({ access_token: authenticatingIdentityJson.access_token, expires_in: authenticatingIdentityJson.expires_in });
     } catch (error) {
         // Failed
