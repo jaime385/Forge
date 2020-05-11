@@ -1,0 +1,24 @@
+/** Just simple CSS styling to make this page a little nicer **/
+main {
+  padding: 2em;
+}
+
+main button {
+  background-color: #3252aa;
+  color: #fff;
+  text-decoration: none;
+  padding: 1em;
+  border-radius: 2px;
+  -webkit-transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease;
+}
+
+main button:hover {
+  background-color: #ff5800;
+}
+
+main input {
+  background-color: #eee;
+  padding: 1em;
+}
+/*# sourceMappingURL=uploadStyle.css.map */

@@ -1,0 +1,15 @@
+/*{
+    "compilerOptions": {
+        "target": "esnext",
+        "watch": true
+    }
+}
+*/
+{
+    "compilerOptions": {
+        "outDir": "./built",
+        "allowJs": true,
+        "target": "es6",
+        "watch": true
+    }
+}

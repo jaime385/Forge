@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,gEAAgE;AAChE,AAAA,IAAI,CAAC;EACD,MAAM,EAAE,CAAC;EACT,OAAO,EAAE,CAAC;CACb",
+    "sources": [
+        "viewerStyle.scss"
+    ],
+    "names": [],
+    "file": "viewerStyle.css"
+}
