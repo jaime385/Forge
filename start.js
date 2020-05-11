@@ -1,5 +1,5 @@
 var express = require('express');           // For web server
-var Axios = require('axios');               // A Promised base http client
+//var Axios = require('axios');               // A Promised base http client
 var bodyParser = require('body-parser');    // Receive JSON format
 const fetch = require('node-fetch');        //Equivalent node library to fetch in the client side.
 
@@ -144,7 +144,7 @@ var Buffer = require('buffer').Buffer;
 String.prototype.toBase64 = function () {
     // Buffer is part of Node.js to enable interaction with octet streams in TCP streams, 
     // file system operations, and other contexts.
-    return new Buffer(this).toString('base64');
+    return new Buffer.from(this).toString('base64');
 };
 
 var multer = require('multer');         // To handle file upload
@@ -167,15 +167,20 @@ app.post('/api/forge/datamanagement/bucket/upload/nuevo', upload.single('fileToU
             data: filecontent
         };
         try {
-            const apiCall2 = await fetch(options.url, options);
-            const apiCallJson = await apiCall2.json();
-            console.log(apiCallJson);
-            var urn = apiCallJson.objectId.toBase64();
+            const uploadFile = await fetch(options.url, options);
+            const translatedFile = await uploadFile.json();
+            var urn = translatedFile.objectId.toBase64();
+            /*
+            const manifest = await fetch(`https://developer.api.autodesk.com/modelderivative/v2/designdata/${urn}/manifest`, {
+                headers: { Authorization: 'Bearer ' + access_token }
+            });
+            const manifestJson = await manifest.json();
+            console.log(translatedFile, manifestJson);*/
             res.redirect('/api/forge/modelderivative/' + urn);
         } catch (error) {
             // Failed
             console.log(error);
-            response.send('Failed to create a new object in the bucket');
+            res.send('Failed to create a new object in the bucket');
         }
         /*Axios(options)
             .then(function (response) {
@@ -193,7 +198,7 @@ app.post('/api/forge/datamanagement/bucket/upload/nuevo', upload.single('fileToU
     });
 });
 
-// Route /api/forge/modelderivative
+/* Route /api/forge/modelderivative
 app.get('/api/forge/modelderivative/:urn', function (req, res) {
     var urn = req.params.urn;
     var format_type = 'svf';
@@ -220,13 +225,65 @@ app.get('/api/forge/modelderivative/:urn', function (req, res) {
         })
     })
         .then(function (response) {
-            // Success
-            //console.log(response);
-            res.redirect('/viewer.html?urn=' + urn);
+            /* Success
+            console.log(response);*/
+/*   res.redirect('/viewer.html?urn=' + urn);
+})
+.catch(function (error) {
+   // Failed
+   console.log(error);
+   res.send('Error at Model Derivative job.');
+});
+});*/
+
+
+// Route /api/forge/modelderivative/nuevo
+app.get('/api/forge/modelderivative/:urn', async (req, res) => {
+    var urn = req.params.urn;
+    var format_type = 'svf';
+    var format_views = ['2d', '3d'];
+    const options = {
+        method: 'POST',
+        url: 'https://developer.api.autodesk.com/modelderivative/v2/designdata/job',
+        headers: {
+            'content-type': 'application/json',
+            Authorization: 'Bearer ' + access_token
+        },
+        body: JSON.stringify({
+            'input': {
+                'urn': urn
+            },
+            'output': {
+                'formats': [
+                    {
+                        'type': format_type,
+                        'views': format_views
+                    }
+                ]
+            }
         })
+    };
+    try {
+        const modelDerivativeApiCall = await fetch(options.url, options);
+        const response = await modelDerivativeApiCall.json();
+        // Success
+        //console.log(response);
+        res.redirect('/viewer.html?urn=' + urn);
+    } catch (error) {
+        // Failed
+        console.log(error);
+        res.send('Error at Model Derivative job.');
+    }
+    /*
+    Axios(options)
+    .then(function (response) {
+        // Success
+        //console.log(response);
+        res.redirect('/viewer.html?urn=' + urn);
+    })
         .catch(function (error) {
             // Failed
             console.log(error);
             res.send('Error at Model Derivative job.');
-        });
+        });*/
 });
