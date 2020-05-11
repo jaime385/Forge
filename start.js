@@ -151,10 +151,10 @@ var multer = require('multer');         // To handle file upload
 var upload = multer({ dest: 'tmp/' }); // Save file into local /tmp folder
 
 // Route /api/forge/datamanagement/bucket/upload
-app.post('/api/forge/datamanagement/bucket/upload', upload.single('fileToUpload'), function (req, res) {
+app.post('/api/forge/datamanagement/bucket/upload/nuevo', upload.single('fileToUpload'), function (req, res) {
     var fs = require('fs'); // Node.js File system for reading files
-    fs.readFile(req.file.path, function (err, filecontent) {
-        Axios({
+    fs.readFile(req.file.path, async function (err, filecontent) {
+        const options = {
             method: 'PUT',
             url: 'https://developer.api.autodesk.com/oss/v2/buckets/' + encodeURIComponent(bucketKey) + '/objects/' + encodeURIComponent(req.file.originalname),
             headers: {
@@ -165,11 +165,23 @@ app.post('/api/forge/datamanagement/bucket/upload', upload.single('fileToUpload'
             maxContentLength: Infinity,
             maxBodyLength: Infinity,
             data: filecontent
-        })
+        };
+        try {
+            const apiCall2 = await fetch(options.url, options);
+            const apiCallJson = await apiCall2.json();
+            console.log(apiCallJson);
+            var urn = apiCallJson.objectId.toBase64();
+            res.redirect('/api/forge/modelderivative/' + urn);
+        } catch (error) {
+            // Failed
+            console.log(error);
+            response.send('Failed to create a new object in the bucket');
+        }
+        /*Axios(options)
             .then(function (response) {
                 // Success
                 //console.log(response);
-                console.log(filecontent.length);
+                //console.log(filecontent.length);
                 var urn = response.data.objectId.toBase64();
                 res.redirect('/api/forge/modelderivative/' + urn);
             })
@@ -177,7 +189,7 @@ app.post('/api/forge/datamanagement/bucket/upload', upload.single('fileToUpload'
                 // Failed
                 console.log(error);
                 res.send('Failed to create a new object in the bucket');
-            });
+            });*/
     });
 });
 
@@ -209,7 +221,7 @@ app.get('/api/forge/modelderivative/:urn', function (req, res) {
     })
         .then(function (response) {
             // Success
-            console.log(response);
+            //console.log(response);
             res.redirect('/viewer.html?urn=' + urn);
         })
         .catch(function (error) {
