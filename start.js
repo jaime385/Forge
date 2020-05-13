@@ -1,7 +1,7 @@
 var express = require('express');           // For web server
-//var Axios = require('axios');               // A Promised base http client
+//var Axios = require('axios');             // A Promised base http client
 var bodyParser = require('body-parser');    // Receive JSON format
-const fetch = require('node-fetch');        //Equivalent node library to fetch in the client side.
+const fetch = require('node-fetch');
 
 // Set up Express web server
 var app = express();
@@ -22,7 +22,7 @@ var server = app.listen(app.get('port'), function () {
 var FORGE_CLIENT_ID = 'OUuhvY15Ev5liacsBbJxPWIIxkJ9tsEy';
 var FORGE_CLIENT_SECRET = 's8q0iTPzFWGCT59N';
 var access_token = '';
-var scopes = 'data:read data:write data:create bucket:create bucket:read';
+var scopes = 'data:read data:write data:create bucket:create bucket:read bucket:update';
 const querystring = require('querystring');
 
 // Route /api/forge/oauth
@@ -84,7 +84,7 @@ app.get('/api/forge/oauth/public/nuevo', async (request, response) => {
 // Buckey key and Policy Key for OSS
 const key = 'OUuhvY15Ev5liacsBbJxPWIIxkJ9tsEy';
 // Prefix with your ID so the bucket key is unique across all buckets on all other accounts
-const bucketKey = key.toLowerCase() + '_tutorial_bucket';
+const bucketKey = key.toLowerCase() + '_new_bucket';
 const policyKey = 'transient'; // Expires in 24hr
 
 // Route /api/forge/datamanagement/bucket/create/nuevo
@@ -251,7 +251,9 @@ app.get('/api/forge/modelderivative/:urn', async (req, res) => {
         },
         body: JSON.stringify({
             'input': {
-                'urn': urn
+                'urn': urn/*,
+                'compressedUrn': true,
+                'rootFilename': 'prueba.rvt'*/
             },
             'output': {
                 'formats': [

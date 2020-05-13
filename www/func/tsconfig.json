@@ -1,13 +1,13 @@
 /*{
     "compilerOptions": {
         "target": "esnext",
-        "watch": true
+        "watch": true,
+        //"outDir": "./built",
     }
 }
 */
 {
     "compilerOptions": {
-        "outDir": "./built",
         "allowJs": true,
         "target": "es6",
         "watch": true
