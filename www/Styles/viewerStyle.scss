@@ -2,4 +2,28 @@
 body {
     margin: 0;
     padding: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+
+.gridbody {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.viewer {
+    grid-row: 1/2;
+    grid-column: 1/2;
+    position: absolute;
+    width: 80%;
+    height: 100%;
+}
+
+#sidebar {
+    position: absolute;
+    right: 0;
+    width: 20%;
+    height: 100%;
 }

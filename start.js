@@ -1,23 +1,22 @@
 var express = require('express');           // For web server
-//var Axios = require('axios');             // A Promised base http client
-var bodyParser = require('body-parser');    // Receive JSON format
 const fetch = require('node-fetch');
+const routes = require('./routes/apiCalls');
 
 // Set up Express web server
 var app = express();
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(express.static(__dirname + '/www'));
+//Use routes
+app.use('/', routes);
 
-// This is for web server to start listening to port 3000
+// Server listening on port 3000
 app.set('port', 3000);
 var server = app.listen(app.get('port'), function () {
     console.log('Server listening on port ' + server.address().port);
 });
 
 //-------------------------------------------------------------------
-// Configuration for your Forge account
-// Initialize the 2-legged OAuth2 client, and
-// set specific scopes
+// Configuration for your Forge account. Initialize the 2-legged OAuth2 client, and set specific scopes
 //-------------------------------------------------------------------
 var FORGE_CLIENT_ID = 'OUuhvY15Ev5liacsBbJxPWIIxkJ9tsEy';
 var FORGE_CLIENT_SECRET = 's8q0iTPzFWGCT59N';
@@ -182,60 +181,8 @@ app.post('/api/forge/datamanagement/bucket/upload/nuevo', upload.single('fileToU
             console.log(error);
             res.send('Failed to create a new object in the bucket');
         }
-        /*Axios(options)
-            .then(function (response) {
-                // Success
-                //console.log(response);
-                //console.log(filecontent.length);
-                var urn = response.data.objectId.toBase64();
-                res.redirect('/api/forge/modelderivative/' + urn);
-            })
-            .catch(function (error) {
-                // Failed
-                console.log(error);
-                res.send('Failed to create a new object in the bucket');
-            });*/
     });
 });
-
-/* Route /api/forge/modelderivative
-app.get('/api/forge/modelderivative/:urn', function (req, res) {
-    var urn = req.params.urn;
-    var format_type = 'svf';
-    var format_views = ['2d', '3d'];
-    Axios({
-        method: 'POST',
-        url: 'https://developer.api.autodesk.com/modelderivative/v2/designdata/job',
-        headers: {
-            'content-type': 'application/json',
-            Authorization: 'Bearer ' + access_token
-        },
-        data: JSON.stringify({
-            'input': {
-                'urn': urn
-            },
-            'output': {
-                'formats': [
-                    {
-                        'type': format_type,
-                        'views': format_views
-                    }
-                ]
-            }
-        })
-    })
-        .then(function (response) {
-            /* Success
-            console.log(response);*/
-/*   res.redirect('/viewer.html?urn=' + urn);
-})
-.catch(function (error) {
-   // Failed
-   console.log(error);
-   res.send('Error at Model Derivative job.');
-});
-});*/
-
 
 // Route /api/forge/modelderivative/nuevo
 app.get('/api/forge/modelderivative/:urn', async (req, res) => {
@@ -276,16 +223,4 @@ app.get('/api/forge/modelderivative/:urn', async (req, res) => {
         console.log(error);
         res.send('Error at Model Derivative job.');
     }
-    /*
-    Axios(options)
-    .then(function (response) {
-        // Success
-        //console.log(response);
-        res.redirect('/viewer.html?urn=' + urn);
-    })
-        .catch(function (error) {
-            // Failed
-            console.log(error);
-            res.send('Error at Model Derivative job.');
-        });*/
 });
